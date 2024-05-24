@@ -2,7 +2,7 @@ require("@nomicfoundation/hardhat-toolbox")
 require("hardhat-deploy")
 require("hardhat-deploy-ethers")
 require("./tasks")
-require("dotenv").config()
+require("dotenv").config({ path: './shared/config/.env' })
 
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
