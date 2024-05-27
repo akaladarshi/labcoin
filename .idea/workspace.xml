@@ -5,26 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="480a9c47-8848-4205-9f51-e89a8091bc66" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/go-services/clients/lighthouse.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go-services/services/constants.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go-services/services/models.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go-services/services/store.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Research.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Research.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-services/clients/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/clients/research_contract_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-services/clients/models.go" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/clients/models.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-services/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-services/services/model.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-services/services/query.go" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/services/query.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-services/services/retrieve.go" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/services/retrieve.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go-services/services/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/services/service.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/.env.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/fetch_data.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/models.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/models.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/service.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tasks/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/tasks/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tasks/register_research.js" beforeDir="false" afterPath="$PROJECT_DIR$/tasks/register_research.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,7 +63,7 @@
     "nodejs_package_manager_path": "yarn",
     "prettier.import.notification.dismissed": "true",
     "settings.editor.selected.configurable": "watcher.settings",
-    "ts.external.directory.path": "/Users/tikaryan/Applications/GoLand 2023.2.5.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
+    "ts.external.directory.path": "/Users/tikaryan/go/src/github.com/akaladarshi/labcoin/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -183,11 +166,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/go-services/services/query.go</url>
-          <line>66</line>
-          <option name="timeStamp" value="84" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/go-services/clients/research_contract_client.go</url>
           <line>77</line>
           <option name="timeStamp" value="87" />
@@ -197,11 +175,26 @@
           <line>63</line>
           <option name="timeStamp" value="88" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/scripts/service.js</url>
-          <line>25</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="81" />
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go-services/services/query.go</url>
+          <line>95</line>
+          <option name="timeStamp" value="89" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <condition expression="len(formDetails) != 0" language="go" />
+          <url>file://$PROJECT_DIR$/go-services/services/query.go</url>
+          <line>66</line>
+          <option name="timeStamp" value="91" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go-services/services/query.go</url>
+          <line>94</line>
+          <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go-services/services/retrieve.go</url>
+          <line>51</line>
+          <option name="timeStamp" value="93" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/tasks/register_research.js</url>

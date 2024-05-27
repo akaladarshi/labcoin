@@ -9,6 +9,7 @@ type FormData struct {
 	ResearchID    uint64
 	SpreadSheetID string
 	SheetID       uint64
+	SheetName     string
 }
 
 type StoreCID struct {

@@ -97,6 +97,7 @@ func (q *QueryService) queryContract(_ context.Context) error {
 				ResearchID:    researchID,
 				SpreadSheetID: form.SpreadSheetID,
 				SheetID:       uint64(sheetID),
+				SheetName:     sheetName,
 			}
 		}
 	}

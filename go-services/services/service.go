@@ -20,13 +20,13 @@ func NewService(cfg *config.Config) (*Service, error) {
 		return nil, fmt.Errorf("unable to initialize Ethereum client: %v", err)
 	}
 
-	dataChan := make(chan *FormData, 100)
+	dataChan := make(chan *FormData, 1)
 	queryService, err := NewQueryService(cfg, researchBinding, dataChan)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create query service: %v", err)
 	}
 
-	storeCIDCh := make(chan *StoreCID, 100)
+	storeCIDCh := make(chan *StoreCID, 1)
 	retrievalService, err := NewRetrievalService(cfg, dataChan, storeCIDCh)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create retrieval service: %v", err)

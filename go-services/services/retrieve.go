@@ -43,7 +43,7 @@ func (r *RetrievalService) Start(ctx context.Context) {
 		select {
 		case data := <-r.formDataCh:
 			url := fmt.Sprintf(retrieveFormDataURL, data.SpreadSheetID, data.SheetID)
-			filePath, err := filepath.Abs(fmt.Sprintf(tmpFilePath, r.counter))
+			filePath, err := filepath.Abs(fmt.Sprintf(tmpFilePath, data.SheetName, r.counter))
 			if err != nil {
 				fmt.Printf("invalid filepath: %s\n", err.Error())
 				continue

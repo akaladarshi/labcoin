@@ -6,5 +6,5 @@ const (
 	defaultQueryInterval = 40 * time.Second
 	expressServerURL     = "http://localhost:%s"
 	retrieveFormDataURL  = "https://docs.google.com/spreadsheets/d/%s/export?format=csv&gid=%d"
-	tmpFilePath          = "tmp/fom_data_%d.csv"
+	tmpFilePath          = "tmp/%s_%d.csv"
 )
