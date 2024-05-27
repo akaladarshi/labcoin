@@ -4,17 +4,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/akaladarshi/labcoin/bindings"
 	"github.com/akaladarshi/labcoin/config"
 	"github.com/akaladarshi/labcoin/utils"
 )
 
 type Service struct {
-	cfg             *config.Config
-	researchBinding *bindings.Research
-	formDataCh      chan *FormData
-	qServc          *QueryService
-	retrvServc      *RetrievalService
+	qServc     *QueryService
+	retrvServc *RetrievalService
+	storeServc *StoreService
 }
 
 func NewService(cfg *config.Config) (*Service, error) {
@@ -29,18 +26,26 @@ func NewService(cfg *config.Config) (*Service, error) {
 		return nil, fmt.Errorf("unable to create query service: %v", err)
 	}
 
-	retrievalService, err := NewRetrievalService(cfg, dataChan)
+	storeCIDCh := make(chan *StoreCID, 100)
+	retrievalService, err := NewRetrievalService(cfg, dataChan, storeCIDCh)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create retrieval service: %v", err)
+	}
+
+	storeService, err := NewStoreService(cfg, storeCIDCh)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create store service: %w", err)
 	}
 
 	return &Service{
 		qServc:     queryService,
 		retrvServc: retrievalService,
+		storeServc: storeService,
 	}, nil
 }
 
 func (s *Service) Start(ctx context.Context) {
 	go s.qServc.Start(ctx)
 	go s.retrvServc.Start(ctx)
+	go s.storeServc.Start(ctx)
 }

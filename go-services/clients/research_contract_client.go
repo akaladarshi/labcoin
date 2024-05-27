@@ -1,6 +1,7 @@
 package clients
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -33,8 +34,8 @@ func NewResearchClient(baseURL string) (*ResearchContractClient, error) {
 }
 
 // GetAllFormDetails fetches all the form details from the ResearchContractClient
-func (c *ResearchContractClient) GetAllFormDetails() ([]*ResearchFormData, error) {
-	path := c.BaseURL.JoinPath("/allformdetails")
+func (c *ResearchContractClient) GetAllFormDetails() ([]*FormDetailsResponse, error) {
+	path := c.BaseURL.ResolveReference(&url.URL{Path: "/allformdetails"})
 
 	resp, err := c.Client.Get(path.String())
 	if err != nil {
@@ -47,10 +48,32 @@ func (c *ResearchContractClient) GetAllFormDetails() ([]*ResearchFormData, error
 		return nil, fmt.Errorf("failed to read response body: %w", err)
 	}
 
-	var researches []*ResearchFormData
+	var researches []*FormDetailsResponse
 	if err = json.Unmarshal(body, &researches); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal response: %w", err)
 	}
 
 	return researches, nil
+}
+
+func (c *ResearchContractClient) StoreCID(jsonData []byte) (string, error) {
+	path := c.BaseURL.ResolveReference(&url.URL{Path: "/store-cid"})
+
+	resp, err := c.Client.Post(path.String(), "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return "", fmt.Errorf("failed to send request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return "", fmt.Errorf("failed to store CID, status code: %d, response: %s", resp.StatusCode, body)
+	}
+
+	var response StoreCIDResp
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return "", fmt.Errorf("failed to unmarshal response: %w", err)
+	}
+
+	return response.TxHash, nil
 }

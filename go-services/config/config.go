@@ -13,6 +13,7 @@ type Config struct {
 	GoogleAPIKEY            string `mapstructure:"GOOGLE_API_KEY"`
 	NetworkName             string `mapstructure:"NETWORK"`
 	ExpressServerPort       string `mapstructure:"EXPRESS_SERVER_PORT"`
+	LightHouseAPIKEY        string `mapstructure:"LIGHTHOUSE_API_KEY"`
 	NetCfg                  *NetworkConfig
 }
 

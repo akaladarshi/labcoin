@@ -13,11 +13,6 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-const (
-	defaultQueryInterval = 10 * time.Second
-	expressServerURL     = "http://localhost:%s"
-)
-
 type QueryService struct {
 	cfg             *config.Config
 	researchBinding *bindings.Research
@@ -69,7 +64,7 @@ func (q *QueryService) queryContract(_ context.Context) error {
 		return err
 	}
 
-	for researchID, form := range formDetails {
+	for _, form := range formDetails {
 		sheetID, err := strconv.ParseInt(form.SheetID, 10, 64)
 		if err != nil {
 			return fmt.Errorf("failed to parse sheet ID: %v", err)
@@ -78,6 +73,11 @@ func (q *QueryService) queryContract(_ context.Context) error {
 		maxDataSetCount, err := strconv.ParseUint(form.MaxDataSetCount, 10, 64)
 		if err != nil {
 			return fmt.Errorf("failed to parse max data set count: %v", err)
+		}
+
+		researchID, err := strconv.ParseUint(form.ResearchID, 10, 64)
+		if err != nil {
+			return fmt.Errorf("failed to parse research ID: %v", err)
 		}
 
 		sheetName, err := getSheetName(form.SpreadSheetID, sheetID, q.cfg.GoogleAPIKEY)
@@ -94,7 +94,7 @@ func (q *QueryService) queryContract(_ context.Context) error {
 		// Max data set count is reached, send the data to the retrieval service
 		if uint64(len(res.Values)) >= maxDataSetCount {
 			q.formDataCh <- &FormData{
-				ResearchID:    uint(researchID),
+				ResearchID:    researchID,
 				SpreadSheetID: form.SpreadSheetID,
 				SheetID:       uint64(sheetID),
 			}
