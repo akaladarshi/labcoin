@@ -12,6 +12,7 @@ type Config struct {
 	ResearchContractAddress string `mapstructure:"RESEARCH_CONTRACT_ADDRESS"`
 	GoogleAPIKEY            string `mapstructure:"GOOGLE_API_KEY"`
 	NetworkName             string `mapstructure:"NETWORK"`
+	ExpressServerPort       string `mapstructure:"EXPRESS_SERVER_PORT"`
 	NetCfg                  *NetworkConfig
 }
 

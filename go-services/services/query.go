@@ -3,17 +3,25 @@ package services
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/akaladarshi/labcoin/bindings"
+	"github.com/akaladarshi/labcoin/clients"
 	"github.com/akaladarshi/labcoin/config"
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"
 )
 
+const (
+	defaultQueryInterval = 10 * time.Second
+	expressServerURL     = "http://localhost:%s"
+)
+
 type QueryService struct {
 	cfg             *config.Config
 	researchBinding *bindings.Research
+	contractClient  *clients.ResearchContractClient
 	formDataCh      chan<- *FormData
 	APIService      *sheets.Service
 }
@@ -24,8 +32,14 @@ func NewQueryService(cfg *config.Config, researchBinding *bindings.Research, dat
 		return nil, fmt.Errorf("unable to retrieve Sheets client: %v", err)
 	}
 
+	client, err := clients.NewResearchClient(fmt.Sprintf(expressServerURL, cfg.ExpressServerPort))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create research client: %v", err)
+	}
+
 	return &QueryService{
 		cfg:             cfg,
+		contractClient:  client,
 		researchBinding: researchBinding,
 		formDataCh:      dataCh,
 		APIService:      srv,
@@ -50,13 +64,23 @@ func (q *QueryService) Start(ctx context.Context) {
 }
 
 func (q *QueryService) queryContract(_ context.Context) error {
-	formDetails, err := q.researchBinding.GetAllFormsDetails(nil)
+	formDetails, err := q.contractClient.GetAllFormDetails()
 	if err != nil {
 		return err
 	}
 
-	for _, form := range formDetails {
-		sheetName, err := getSheetName(form.SpreadSheetID, form.SheetID.Int64(), q.cfg.GoogleAPIKEY)
+	for researchID, form := range formDetails {
+		sheetID, err := strconv.ParseInt(form.SheetID, 10, 64)
+		if err != nil {
+			return fmt.Errorf("failed to parse sheet ID: %v", err)
+		}
+
+		maxDataSetCount, err := strconv.ParseUint(form.MaxDataSetCount, 10, 64)
+		if err != nil {
+			return fmt.Errorf("failed to parse max data set count: %v", err)
+		}
+
+		sheetName, err := getSheetName(form.SpreadSheetID, sheetID, q.cfg.GoogleAPIKEY)
 		if err != nil {
 			return fmt.Errorf("failed to get sheet name: %v", err)
 		}
@@ -68,10 +92,11 @@ func (q *QueryService) queryContract(_ context.Context) error {
 		}
 
 		// Max data set count is reached, send the data to the retrieval service
-		if uint64(len(res.Values)) >= form.MaxDataSetCount.Uint64() {
+		if uint64(len(res.Values)) >= maxDataSetCount {
 			q.formDataCh <- &FormData{
+				ResearchID:    uint(researchID),
 				SpreadSheetID: form.SpreadSheetID,
-				SheetID:       form.SheetID.Uint64(),
+				SheetID:       uint64(sheetID),
 			}
 		}
 	}
@@ -81,8 +106,7 @@ func (q *QueryService) queryContract(_ context.Context) error {
 
 // getSheetName retrieves the sheet name using the spreadsheet ID and sheet ID
 func getSheetName(spreadsheetID string, sheetID int64, apiKey string) (string, error) {
-	ctx := context.Background()
-	srv, err := sheets.NewService(ctx, option.WithAPIKey(apiKey))
+	srv, err := sheets.NewService(context.Background(), option.WithAPIKey(apiKey))
 	if err != nil {
 		return "", fmt.Errorf("unable to retrieve Sheets client: %v", err)
 	}

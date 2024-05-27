@@ -12,10 +12,14 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-const retrieveFormDataURL = "https://docs.google.com/spreadsheets/d/%s/export?format=csv&gid=%d"
+const (
+	retrieveFormDataURL = "https://docs.google.com/spreadsheets/d/%s/export?format=csv&gid=%d"
+	tmpFilePath         = "../tmp/fom_data_%d.csv"
+)
 
 type RetrievalService struct {
 	cfg        *config.Config
+	counter    int
 	FormDataCh <-chan *FormData
 	APIService *sheets.Service // TODO: either remove this or find a way to retrieve using API
 }
@@ -37,11 +41,13 @@ func (r *RetrievalService) Start(ctx context.Context) {
 		select {
 		case data := <-r.FormDataCh:
 			url := fmt.Sprintf(retrieveFormDataURL, data.SpreadSheetID, data.SheetID)
-			err := downloadCSV(url, "test_form.csv")
+			filePath := fmt.Sprintf(tmpFilePath, r.counter)
+			err := downloadCSV(url, filePath)
 			if err != nil {
 				fmt.Printf("failed to download CSV: %v", err)
 			}
 
+			r.counter++
 		case <-ctx.Done():
 			return
 		}

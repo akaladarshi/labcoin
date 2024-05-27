@@ -3,19 +3,14 @@ package services
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/akaladarshi/labcoin/bindings"
 	"github.com/akaladarshi/labcoin/config"
 	"github.com/akaladarshi/labcoin/utils"
-	"github.com/ethereum/go-ethereum/ethclient"
 )
-
-const defaultQueryInterval = 5 * time.Second
 
 type Service struct {
 	cfg             *config.Config
-	client          *ethclient.Client
 	researchBinding *bindings.Research
 	formDataCh      chan *FormData
 	qServc          *QueryService
@@ -25,7 +20,7 @@ type Service struct {
 func NewService(cfg *config.Config) (*Service, error) {
 	_, researchBinding, err := utils.IntializeEthereumClient(cfg)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to initialize Ethereum client: %v", err)
 	}
 
 	dataChan := make(chan *FormData, 100)
