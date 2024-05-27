@@ -5,32 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="480a9c47-8848-4205-9f51-e89a8091bc66" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.prettierignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.solcover.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.solhint.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.solhintignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/Research.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deploy/deploy.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deployments/calibrationnet/.chainId" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deployments/calibrationnet/Research.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deployments/calibrationnet/solcInputs/466184b8c965ca456bbd2c707e146246.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deployments/calibrationnet/solcInputs/c3c454f07b32b15894b0be72e64d8223.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deployments/calibrationnet/solcInputs/f2cebc8b03f3b685a9b2a65051a0779f.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hardhat.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helper-hardhat-config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/.env.example" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/fetch_data.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/service.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tasks/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tasks/register_research.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yarn-error.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go-services/services/query.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go-services/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go-services/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go-services/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go-services/services/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/go-services/services/service.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +20,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Go Application" />
+        <option value="Go File" />
       </list>
     </option>
   </component>
@@ -68,7 +48,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "DefaultGoTemplateProperty": "Go Application",
+    "DefaultGoTemplateProperty": "Go File",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
@@ -83,7 +63,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
     "prettier.import.notification.dismissed": "true",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "watcher.settings",
     "ts.external.directory.path": "/Users/tikaryan/go/src/github.com/akaladarshi/labcoin/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -95,11 +75,11 @@
       <recent name="$PROJECT_DIR$/contracts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/go-services/services/query" />
+      <recent name="$PROJECT_DIR$/go-services/services" />
       <recent name="$PROJECT_DIR$/contract" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/contracts" />
-      <recent name="$PROJECT_DIR$/contracts/contracts" />
-      <recent name="$PROJECT_DIR$/deploy" />
     </key>
   </component>
   <component name="RunManager">
@@ -151,7 +131,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VgoProject">
-    <integration-enabled>false</integration-enabled>
     <settings-migrated>true</settings-migrated>
   </component>
 </project>

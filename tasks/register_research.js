@@ -28,31 +28,22 @@ task("register-research", "Calls the registerResearch function of the contract")
 .addParam("title", "The title of the research")
 .addParam("description", "The description of the research")
 .addParam("timeduration", "The time duration of the research")
-.addParam("datasetcount", "The data set count of the research")
-.addParam("link", "The link of the research")
-.addParam("datalink", "The data link of the research")
+.addParam("maxdatasetcount", "The max data set count for the research")
+.addParam("formlink", "The link of the form research")
+.addParam("spreadsheetid", "The id of the research spreadsheet")
+.addParam("sheetid", "The id of sheet of the research spreadsheet")
 .setAction(async taskArgs => {
     const contractAddr = taskArgs.contract;
     const Contract = await ethers.getContractFactory("Research");
     const contract = Contract.attach(contractAddr);
-    const researchData = {
-        title: taskArgs.title,
-        description: taskArgs.description,
-        timeDuration: parseInt(taskArgs.timeduration),
-        dataSetCount: parseInt(taskArgs.datasetcount),
-        researcher: "",
-        data: {
-            link: taskArgs.link,
-            dataLink: taskArgs.datalink
-        }
-    };
     const tx = await contract.registerResearch(
-        researchData.title,
-        researchData.description,
-        researchData.data.link,
-        researchData.data.dataLink,
-        researchData.dataSetCount,
-        researchData.timeDuration,
+        taskArgs.title,
+        taskArgs.description,
+        taskArgs.formlink,
+        taskArgs.spreadsheetid,
+        parseInt(taskArgs.sheetid),
+        parseInt(taskArgs.maxdatasetcount),
+        parseInt(taskArgs.timeduration),
     );
     tx.wait(5)
     console.log("Transaction: ", tx.hash);

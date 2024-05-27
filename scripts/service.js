@@ -7,7 +7,7 @@ const contractAddress = process.env.RESEARCH_CONTRACT_ADDRESS;
 async function main() {
     const contract = await ethers.getContractAt("Research", contractAddress);
 
-    const researches = await contract.getAllResearches();
+    const researches = await contract.getAllFormsDetails();
     console.log(`Total searches: ${researches}`);
 }
 

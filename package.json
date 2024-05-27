@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "coverage": "hardhat coverage --solcoverjs ./.solcover.js",
     "generate-go-bindings": "scripts/generate_abi.sh",
+    "compile": "npx hardhat compile",
     "deploy-research-contract": "hardhat run scripts/deploy-research-contract.js"
   },
   "devDependencies": {},

@@ -5,14 +5,14 @@ type NetworkConfig struct {
 	URL     string
 }
 
-var networkConfig = map[string]NetworkConfig{
+var networkConfig = map[string]*NetworkConfig{
 	"localnet": {
 		ChainID: 31415926,
 		URL:     "http://localhost:8545",
 	},
 	"calibrationnet": {
 		ChainID: 314159,
-		URL:     "http://127.0.0.1:1234/rpc/v1",
+		URL:     "https://api.calibration.node.glif.io/rpc/v1",
 	},
 	"filecoinmainnet": {
 		ChainID: 314,
@@ -20,6 +20,6 @@ var networkConfig = map[string]NetworkConfig{
 	},
 }
 
-func GetNetworkConfig(network string) NetworkConfig {
+func GetNetworkConfig(network string) *NetworkConfig {
 	return networkConfig[network]
 }

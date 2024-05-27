@@ -28,10 +28,7 @@ fi
 CONTRACTS_DIR="contracts"
 #ARTIFACTS_DIR="artifacts/contracts"
 BUILD_DIR="build"
-BINDINGS_DIR="services/bindings"
-
-# Ensure the bindings directory exists
-mkdir -p $BINDINGS_DIR
+BINDINGS_DIR="go-services/bindings"
 
 CONTRACT_FILES=("Research.sol")
 
@@ -47,9 +44,24 @@ for CONTRACT in "${CONTRACT_FILES[@]}"; do
   BIN_FILE="$BUILD_DIR/$CONTRACT_NAME.bin"
   OUTPUT_FILE="$BINDINGS_DIR/$CONTRACT_NAME.go"
 
-  echo "Generating Go bindings for $CONTRACT_NAME..."
+  echo "Generating Go bindings for contract $CONTRACT_NAME..."
+
+  # Verify if the directory exists
+  if [ ! -d "$BINDINGS_DIR" ]; then
+      echo "Error: Directory does not exist: $BINDINGS_DIR."
+      exit 1
+  fi
+
   # shellcheck disable=SC2086
   abigen --abi="$ABI_FILE" --bin=$BIN_FILE --pkg=bindings --type $CONTRACT_NAME --out=$OUTPUT_FILE
+
+  # Verify the file was created
+  if [ ! -e "$OUTPUT_FILE" ]; then
+    echo "Failed to generate Go binding."
+    exit 1
+  fi
+
+  echo "Go binding file path: $OUTPUT_FILE"
 done
 
 echo "Go bindings generated successfully."
