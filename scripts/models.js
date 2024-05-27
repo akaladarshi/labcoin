@@ -1,5 +1,6 @@
 class ResearchFormData {
-    constructor(formLink, spreadSheetID, sheetID, maxDataSetCount) {
+    constructor(researchID, formLink, spreadSheetID, sheetID, maxDataSetCount) {
+        this.researchID = researchID;
         this.formLink = formLink;
         this.spreadSheetID = spreadSheetID;
         this.sheetID = sheetID;
@@ -9,16 +10,18 @@ class ResearchFormData {
     // Method to handle BigInt serialization
     static fromContractData(data) {
         return new ResearchFormData(
-            data[0],
-            data[1],
-            data[2].toString(), // Convert BigInt to string
-            data[3].toString()  // Convert BigInt to string
+            data.researchID.toString(),
+            data.formLink,
+            data.spreadSheetID,
+            data.sheetID.toString(),
+            data.maxDataSetCount.toString()
         );
     }
 
     // Method to convert instance to a JSON-friendly format
     toJSON() {
         return {
+            research_id: this.researchID,
             form_link: this.formLink,
             spread_sheet_id: this.spreadSheetID,
             sheet_id: this.sheetID,
@@ -27,4 +30,15 @@ class ResearchFormData {
     }
 }
 
-module.exports = ResearchFormData;
+class StoreCID {
+    constructor(researchID, cid, name) {
+        this.researchID = researchID;
+        this.cid = cid;
+        this.name = name
+    }
+}
+
+module.exports = {
+    ResearchFormData,
+    StoreCID
+};

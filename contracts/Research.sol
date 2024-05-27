@@ -3,6 +3,7 @@ pragma solidity 0.8.21;
 
 contract Research {
     struct FormData {
+        uint256 researchID;
         string formLink;
         string spreadSheetID;
         uint sheetID;
@@ -19,6 +20,7 @@ contract Research {
 
     uint256 public researchCounter;
     mapping(uint256 => ResearchData) public researches;
+    mapping (uint256 => string) public researchIDToCID;
 
     // Event to log when a new research project is registered
     event ResearchRegistered(
@@ -53,7 +55,7 @@ contract Research {
         uint _timeDuration
     ) public {
         researchCounter++;
-        ResearchData memory _researchData = ResearchData(_title, _description, _timeDuration, msg.sender, FormData(_formLink, _spreadSheetID, _sheetID, _maxDataSetCount));
+        ResearchData memory _researchData = ResearchData(_title, _description, _timeDuration, msg.sender, FormData(researchCounter, _formLink, _spreadSheetID, _sheetID, _maxDataSetCount));
         verifyResearchData(_researchData);
         researches[researchCounter] = _researchData;
 
@@ -70,11 +72,29 @@ contract Research {
 
 
     function getAllFormsDetails() public view returns (FormData[] memory) {
-        FormData[] memory _formsData = new FormData[](researchCounter);
+        uint256 count = 0;
         for (uint256 i = 1; i <= researchCounter; i++) {
-            _formsData[i - 1] = researches[i].data;
+            if (bytes(researchIDToCID[i]).length < 1) {
+                count++;
+            }
+        }
+
+        FormData[] memory _formsData = new FormData[](count);
+        uint256 index = 0;
+        for (uint256 i = 1; i <= researchCounter; i++) {
+            if (bytes(researchIDToCID[i]).length < 1) {
+                _formsData[index] = researches[i].data;
+                index++;
+            }
         }
 
         return _formsData;
+    }
+
+    function storeCID(uint256 _researchId, string memory _cid) public {
+        require(bytes(_cid).length > 0, "CID is required");
+        require(bytes(researches[_researchId].title).length > 0, "Research project does not exist");
+
+        researchIDToCID[_researchId] = _cid;
     }
 }
