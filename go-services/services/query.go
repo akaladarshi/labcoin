@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/akaladarshi/labcoin/bindings"
@@ -19,9 +20,10 @@ type QueryService struct {
 	contractClient  *clients.ResearchContractClient
 	formDataCh      chan<- *FormData
 	APIService      *sheets.Service
+	cachedData      *sync.Map
 }
 
-func NewQueryService(cfg *config.Config, researchBinding *bindings.Research, dataCh chan<- *FormData) (*QueryService, error) {
+func NewQueryService(cfg *config.Config, researchBinding *bindings.Research, dataCh chan<- *FormData, cache *sync.Map) (*QueryService, error) {
 	srv, err := sheets.NewService(context.Background(), option.WithAPIKey(cfg.GoogleAPIKEY))
 	if err != nil {
 		return nil, fmt.Errorf("unable to retrieve Sheets client: %v", err)
@@ -38,6 +40,7 @@ func NewQueryService(cfg *config.Config, researchBinding *bindings.Research, dat
 		researchBinding: researchBinding,
 		formDataCh:      dataCh,
 		APIService:      srv,
+		cachedData:      cache,
 	}, nil
 }
 
@@ -65,6 +68,14 @@ func (q *QueryService) queryContract(_ context.Context) error {
 	}
 
 	for _, form := range formDetails {
+		_, ok := q.cachedData.Load(form.ResearchID)
+		if ok {
+			// already in processing,
+			continue
+		}
+
+		q.cachedData.Store(form.ResearchID, struct{}{})
+
 		sheetID, err := strconv.ParseInt(form.SheetID, 10, 64)
 		if err != nil {
 			return fmt.Errorf("failed to parse sheet ID: %v", err)

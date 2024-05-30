@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"sync"
 
 	"github.com/akaladarshi/labcoin/config"
 	"github.com/akaladarshi/labcoin/utils"
@@ -20,8 +21,10 @@ func NewService(cfg *config.Config) (*Service, error) {
 		return nil, fmt.Errorf("unable to initialize Ethereum client: %v", err)
 	}
 
+	var cache sync.Map
+
 	dataChan := make(chan *FormData, 1)
-	queryService, err := NewQueryService(cfg, researchBinding, dataChan)
+	queryService, err := NewQueryService(cfg, researchBinding, dataChan, &cache)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create query service: %v", err)
 	}
@@ -32,7 +35,7 @@ func NewService(cfg *config.Config) (*Service, error) {
 		return nil, fmt.Errorf("unable to create retrieval service: %v", err)
 	}
 
-	storeService, err := NewStoreService(cfg, storeCIDCh)
+	storeService, err := NewStoreService(cfg, storeCIDCh, &cache)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create store service: %w", err)
 	}
