@@ -25,6 +25,7 @@
 
 task("register-research", "Calls the registerResearch function of the contract")
     .addParam("contract", "The address of the contract that you want to interact with")
+    .addParam("labcoincontract", "The address of the labcoin contract")
     .addParam("title", "The title of the research")
     .addParam("description", "The description of the research")
     .addParam("timeduration", "The time duration of the research")
@@ -32,11 +33,20 @@ task("register-research", "Calls the registerResearch function of the contract")
     .addParam("formlink", "The link of the form research")
     .addParam("spreadsheetid", "The id of the research spreadsheet")
     .addParam("sheetid", "The id of sheet of the research spreadsheet")
+    .addParam("amount", "The amount to distribute to the research participants")
     .setAction(async taskArgs => {
         const contractAddr = taskArgs.contract;
-        const Contract = await ethers.getContractFactory("Research");
-        const contract = Contract.attach(contractAddr);
-        const tx = await contract.registerResearch(
+        const ResearchContract = await ethers.getContractFactory("Research");
+        const researchContract = ResearchContract.attach(contractAddr);
+
+        const labCoinContract = await ethers.getContractFactory("Labcoin");
+        const labCoin = labCoinContract.attach(taskArgs.labcoincontract);
+
+        // researchers will allow the contract to distribute the labcoins on their behalf.
+        await labCoin.approve(researchContract.target, ethers.parseEther("100"));
+
+        const amount= ethers.parseEther(taskArgs.amount);
+        const tx = await researchContract.registerResearch(
             taskArgs.title,
             taskArgs.description,
             taskArgs.formlink,
@@ -44,6 +54,7 @@ task("register-research", "Calls the registerResearch function of the contract")
             parseInt(taskArgs.sheetid),
             parseInt(taskArgs.maxdatasetcount),
             parseInt(taskArgs.timeduration),
+            {value: amount },
         );
         tx.wait(5)
         console.log("Transaction: ", tx.hash);

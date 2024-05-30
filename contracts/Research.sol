@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.21;
 
+import {Labcoin} from "./labcoin.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 contract Research {
+    IERC20 public immutable labCoin;
+
     struct FormData {
         uint256 researchID;
         string formLink;
@@ -15,12 +20,17 @@ contract Research {
         string description;
         uint timeDuration;
         address researcher;
+        uint256 remainingAmount;
         FormData data;
     }
 
     uint256 public researchCounter;
     mapping(uint256 => ResearchData) public researches;
     mapping (uint256 => string) public researchIDToCID;
+
+    constructor(address _labCoinAddress) {
+        labCoin = Labcoin(_labCoinAddress);
+    }
 
     // Event to log when a new research project is registered
     event ResearchRegistered(
@@ -30,7 +40,8 @@ contract Research {
         uint timeDuration,
         uint maxDataSetCount,
         string formLink,
-        address indexed researcher
+        address indexed researcher,
+        uint256 remainingAmount
     );
 
     function verifyResearchData(ResearchData memory _researchData) internal pure {
@@ -53,9 +64,18 @@ contract Research {
         uint _sheetID,
         uint _maxDataSetCount,
         uint _timeDuration
-    ) public {
+    ) public payable {
+        uint256 _amount = msg.value;
+        require(_amount > 0, "Amount is required");
+
+        // Ensure the contract is allowed to spend the specified amount on behalf of the researcher
+        require(labCoin.allowance(msg.sender, address(this)) >= _amount, "Allowance is less than amount");
+        labCoin.approve(msg.sender, _amount);
+        // Transfer the specified amount of LabPoints from the researcher to the contract
+        require(labCoin.transferFrom(msg.sender, address(this), _amount), "Token transfer failed");
+
         researchCounter++;
-        ResearchData memory _researchData = ResearchData(_title, _description, _timeDuration, msg.sender, FormData(researchCounter, _formLink, _spreadSheetID, _sheetID, _maxDataSetCount));
+        ResearchData memory _researchData = ResearchData(_title, _description, _timeDuration, msg.sender, _amount, FormData(researchCounter, _formLink, _spreadSheetID, _sheetID, _maxDataSetCount));
         verifyResearchData(_researchData);
         researches[researchCounter] = _researchData;
 
@@ -66,8 +86,22 @@ contract Research {
             _timeDuration,
             _maxDataSetCount,
             _formLink,
-            msg.sender
+            msg.sender,
+            _amount
         );
+    }
+
+    function distributeLabCoin(uint256 _researchId, address participant) public {
+        ResearchData storage research = researches[_researchId];
+
+        // distribute amount based on max data set
+        uint256 amountPerParticipant = research.remainingAmount / research.data.researchID;
+
+        // Transfer tokens from the researcher to the participant
+        require(labCoin.transferFrom(research.researcher, participant, amountPerParticipant), "Token transfer failed");
+
+        // Update the remaining amount to be distributed
+        research.remainingAmount -= amountPerParticipant;
     }
 
 
