@@ -9,11 +9,11 @@ module.exports = async ({ deployments }) => {
     const {deploy} = deployments;
     console.log("Wallet Ethereum Address:", wallet.address)
 
-    const labCoinContract = await ethers.getContractFactory("Labcoin");
-    const labCoin = await labCoinContract.connect(wallet)
-    const labcoin = await labCoin.deploy(wallet.address);
-    await labcoin.waitForDeployment()
-    console.log("Labcoin Contract Address:", labcoin.target)
+    // const labCoinContract = await ethers.getContractFactory("Labcoin");
+    // const labCoin = await labCoinContract.connect(wallet)
+    // const labcoin = await labCoin.deploy(wallet.address);
+    // await labcoin.waitForDeployment()
+    // console.log("Labcoin Contract Address:", labcoin.target)
 
     const researchContract = await ethers.getContractFactory("Research");
     const res = await researchContract.connect(wallet)

@@ -98,7 +98,7 @@ contract Research {
         uint256 amountPerParticipant = research.remainingAmount / research.data.maxDataSetCount;
 
         // Transfer tokens from the researcher to the participant
-        require(labCoin.transferFrom(research.researcher, participant, amountPerParticipant), "Token transfer failed");
+        require(labCoin.transferFrom(address(this), participant, amountPerParticipant), "Token transfer failed");
 
         // Update the remaining amount to be distributed
         research.remainingAmount -= amountPerParticipant;
