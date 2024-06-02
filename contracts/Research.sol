@@ -63,9 +63,9 @@ contract Research {
         string memory _spreadSheetID,
         uint _sheetID,
         uint _maxDataSetCount,
-        uint _timeDuration
-    ) public payable {
-        uint256 _amount = msg.value;
+        uint _timeDuration,
+        uint _amount
+    ) public {
         require(_amount > 0, "Amount is required");
 
         // Ensure the contract is allowed to spend the specified amount on behalf of the researcher
@@ -95,7 +95,7 @@ contract Research {
         ResearchData storage research = researches[_researchId];
 
         // distribute amount based on max data set
-        uint256 amountPerParticipant = research.remainingAmount / research.data.researchID;
+        uint256 amountPerParticipant = research.remainingAmount / research.data.maxDataSetCount;
 
         // Transfer tokens from the researcher to the participant
         require(labCoin.transferFrom(research.researcher, participant, amountPerParticipant), "Token transfer failed");

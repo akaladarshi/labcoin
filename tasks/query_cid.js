@@ -4,7 +4,7 @@ task("query-cid", "Queries the cid based on the research id from the research co
         const contractAddress = process.env.RESEARCH_CONTRACT_ADDRESS;
         const Contract = await ethers.getContractFactory("Research");
         const contract = Contract.attach(contractAddress);
-        const cid = await contract.researchIDToCID(parseInt(taskArgs.researchid));
+        const cid = await contract.researches(parseInt(taskArgs.researchid));
         // converts bytes to string
         console.log(cid);
     });
