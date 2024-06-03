@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Research {
     IERC20 public immutable labCoin;
+    uint8 public constant DECIMALS = 18; // Load from labcoin
 
     struct FormData {
         uint256 researchID;
@@ -64,18 +65,19 @@ contract Research {
         uint _sheetID,
         uint _maxDataSetCount,
         uint _timeDuration,
-        uint _amount
+        uint _distributionAmoutInWhole
     ) public {
-        require(_amount > 0, "Amount is required");
+        require(_distributionAmoutInWhole > 0, "Amount is required");
+        uint amountInSmallestUnits = _distributionAmoutInWhole * (10 ** DECIMALS);
 
         // Ensure the contract is allowed to spend the specified amount on behalf of the researcher
-        require(labCoin.allowance(msg.sender, address(this)) >= _amount, "Allowance is less than amount");
-        labCoin.approve(msg.sender, _amount);
+        require(labCoin.allowance(msg.sender, address(this)) >= amountInSmallestUnits, "Allowance is less than amount");
+
         // Transfer the specified amount of LabPoints from the researcher to the contract
-        require(labCoin.transferFrom(msg.sender, address(this), _amount), "Token transfer failed");
+        require(labCoin.transferFrom(msg.sender, address(this), amountInSmallestUnits), "Token transfer failed");
 
         researchCounter++;
-        ResearchData memory _researchData = ResearchData(_title, _description, _timeDuration, msg.sender, _amount, FormData(researchCounter, _formLink, _spreadSheetID, _sheetID, _maxDataSetCount));
+        ResearchData memory _researchData = ResearchData(_title, _description, _timeDuration, msg.sender, amountInSmallestUnits, FormData(researchCounter, _formLink, _spreadSheetID, _sheetID, _maxDataSetCount));
         verifyResearchData(_researchData);
         researches[researchCounter] = _researchData;
 
@@ -87,7 +89,7 @@ contract Research {
             _maxDataSetCount,
             _formLink,
             msg.sender,
-            _amount
+            _distributionAmoutInWhole
         );
     }
 
@@ -97,8 +99,8 @@ contract Research {
         // distribute amount based on max data set
         uint256 amountPerParticipant = research.remainingAmount / research.data.maxDataSetCount;
 
-        // Transfer tokens from the researcher to the participant
-        require(labCoin.transferFrom(address(this), participant, amountPerParticipant), "Token transfer failed");
+        // Transfer labcoins on behalf on the researcher to the participant
+        require(labCoin.transfer(participant, amountPerParticipant), "Token transfer failed");
 
         // Update the remaining amount to be distributed
         research.remainingAmount -= amountPerParticipant;
